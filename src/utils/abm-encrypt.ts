@@ -97,12 +97,10 @@ export class AbmEncrypt {
     }
     public static decrypt(enc: string): string {
 
-        const pwdWithoutsalt = AbmEncrypt.removeSalt(AbmEncrypt.basicDecrypt(enc));
-
+        let pwdWithsalt = enc;
         if (atob) {
-            return atob(pwdWithoutsalt);
+            pwdWithsalt = atob(enc);
         }
-
-        return pwdWithoutsalt;
+        return AbmEncrypt.removeSalt(AbmEncrypt.basicDecrypt(pwdWithsalt));
     }
 }
