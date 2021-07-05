@@ -1,6 +1,6 @@
 {
   "name": "@abmcode/fe-core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Frontend framework free core libs",
   "author": "Bryan Yin (hanbing.yin@abmcode.com)",
   "repository": "https://github.com/BryanYin/fe-core",
@@ -11,7 +11,7 @@
     "abmcode"
   ],
   "main": "./dist/tsc/main.js",
-  "typings": "./dist/tsc/main.d.ts",
+  "types": "./dist/tsc/main.d.ts",
   "browser": "./dist/browser.js",
   "publishConfig": {
     "access": "public"
@@ -26,11 +26,11 @@
     "build": "tsc",
     "types:browser": "tsc --declarationDir dist/browser --emitDeclarationOnly true",
     "dist": "npm run build && browserify --standalone main ./dist/tsc/main.js > ./dist/browser.js",
-    "build-all": "yarn clean && yarn build && yarn esbuild-node && yarn esbuild-browser",
-    "esbuild-browser": "esbuild src/browser.ts --bundle  --sourcemap=external --outfile=dist/esbuild/browser.js",
+    "build-all": "yarn clean && yarn build && yarn esbuild-browser",
+    "esbuild-browser": "esbuild src/main.ts --bundle --format=esm --sourcemap=external --outfile=dist/esbuild/browser.js",
     "esbuild-browser:dev": "esbuild src/browser.ts --bundle --outfile=dist/esbuild/browser.js",
     "esbuild-browser:watch": "esbuild src/browser.ts --bundle --watch --outfile=dist/esbuild/browser.js",
-    "esbuild-node": "esbuild src/cli.ts --bundle --platform=node  --sourcemap=external --outfile=dist/esbuild/cli.js",
+    "esbuild-node": "esbuild src/cli.ts --bundle --platform=node --format=esm  --sourcemap=external --outfile=dist/esbuild/cli.js",
     "esbuild-node:dev": "esbuild src/cli.ts --bundle --sourcemap=external --outfile=dist/esbuild/cli.js",
     "esbuild-node:watch": "esbuild src/cli.ts --bundle --watch --sourcemap=external --outfile=dist/esbuild/cli.js"
   },
