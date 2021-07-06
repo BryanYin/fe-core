@@ -2,8 +2,6 @@ import { IAbmComparable } from '../interfaces/comparable.interface';
 import { IAbmStringSavable } from '../interfaces/saveable.interface';
 import { AbmEncrypt } from '../utils/abm-encrypt';
 
-
-
 /**
  * storage 中保存的用户信息。
  */
@@ -28,13 +26,7 @@ export type AbmLoginFormType = Pick<AbmUserForSave, 'id' | 'password' | 'remembe
 /**
  * 用户状态。
  */
-export enum AbmUserStatus {
-    NEW = -1,
-    OK = 0,
-    EXPIRED = 1,
-    LOGOUT = 2,
-}
-
+export type AbmUserStatus = 'NEW' | 'LOGIN' | 'EXPIRED' | 'LOGOUT';
 
 /**
  * 用户类。可转换成 string 保存。
@@ -47,15 +39,12 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
 
     public key = AbmUser.STORAGE_KEY;
 
-    public id: string;
-    public password: string;
-    public rememberMe: boolean;
     public status: AbmUserStatus;
     public displayName: string | undefined;
     public token: string | undefined;
     public refreshToken: string | undefined;
     private tokenExpire: Date;
-    public customProps: unknown;
+    private customProps: Record<string, unknown> = {};
 
     /**
      * 新建用户
@@ -63,11 +52,11 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
      * @param password user password without encrypt
      * @param rememberMe remember me
      */
-    constructor(id?: string, password?: string, rememberMe?: boolean) {
-        this.password = password ?? '';
-        this.id = id ?? '';
-        this.rememberMe = !!rememberMe;
-        this.status = AbmUserStatus.NEW;
+    constructor(
+        public id = '',
+        public password = '',
+        public rememberMe = false) {
+        this.status = 'NEW';
         this.tokenExpire = AbmUser.TOKEN_NEVER_EXPIRE;
     }
 
@@ -100,7 +89,6 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
             this.tokenExpire = new Date(expire.replace(' ', 'T'));
         }
 
-        new Date()
         if (this.tokenExpire === null) {
             throw new Error('setTokenExpireFromString: date format incorrect');
         }
@@ -112,7 +100,7 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
         this.updateUserStatus();
     }
 
-    public setCustomProps<T>(props: T): void {
+    public setCustomProps(props: Record<string, unknown>): void {
         this.customProps = props;
     }
 
@@ -129,9 +117,9 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
         }
 
         if (this.tokenExpire?.getTime() < new Date().getTime()) {
-            this.status = AbmUserStatus.EXPIRED;
+            this.status = 'EXPIRED';
         } else {
-            this.status = AbmUserStatus.OK;
+            this.status = 'LOGIN';
         }
     }
 
