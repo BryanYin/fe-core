@@ -1,11 +1,11 @@
-import { IAbmMapToInterface } from '../interfaces/map-to-interface.interface';
+import { IAbmClassToInterface } from '../interfaces/class-to-interface.interface';
 
 /**
  * NameValue，比较重要的一个类，存储单一的 key-value 类型。
  *
  * 提供 toInterface() 方法转换为 接口。在 ECharts 中使用必须转换。
  */
-export class AbmNameValue<T> implements IAbmMapToInterface<AbmNameValue<T>> {
+export class AbmNameValue<T> implements IAbmClassToInterface<AbmNameValue<T>> {
     public name: string;
     public value: T | undefined;
 

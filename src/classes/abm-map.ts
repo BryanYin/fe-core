@@ -1,11 +1,17 @@
 /**
- * 扩展 Map。提供下列方法：
+ * Extends JS origin Map. Providing:
  *
- * getOrDefault - 获取值，如不存在，则使用默认值。
+ * getOrDefault - get value, if not exists then use default value.
  *
- * getOrDefaultThenPutDefault - 获取值，如不存在，则使用默认值，并将默认值设置为 key 的值。
+ * getOrDefaultThenSetDefault - get value, if not exists then use default value and set default value for the key
  */
 export class AbmMap<K, V> extends Map<K, V>{
+  /**
+   * Get value, if not exists then use default value.
+   * @param key key
+   * @param dValue default value if key not exists
+   * @returns the value in map or default value provided
+   */
   public getOrDefault(key: K, dValue: V): V {
     const value = this.get(key);
 
@@ -16,7 +22,13 @@ export class AbmMap<K, V> extends Map<K, V>{
     }
   }
 
-  public getOrDefaultThenPutDefault(key: K, dValue: V): V {
+  /**
+   * Get value, if not exists then use default value and set default value for the key
+   * @param key key
+   * @param dValue default value if key not exists
+   * @returns he value in map or default value provided
+   */
+  public getOrDefaultThenSetDefault(key: K, dValue: V): V {
     const value = this.get(key);
 
     if (value === null || value === undefined) {

@@ -1,9 +1,10 @@
+import { IAbmClassToInterface } from '../interfaces/class-to-interface.interface';
 import { IAbmComparable } from '../interfaces/comparable.interface';
 import { IAbmStringSavable } from '../interfaces/saveable.interface';
 import { AbmEncrypt } from '../utils/abm-encrypt';
 
 /**
- * storage 中保存的用户信息。
+ * User information stored in certain storage.
  */
 export interface AbmUserForSave {
     displayName: string;
@@ -19,19 +20,19 @@ export interface AbmUserForSave {
 }
 
 /**
- * 登录表单类型
+ * Login fields type
  */
 export type AbmLoginFormType = Pick<AbmUserForSave, 'id' | 'password' | 'rememberMe'>;
 
 /**
- * 用户状态。
+ * User status
  */
 export type AbmUserStatus = 'NEW' | 'LOGIN' | 'EXPIRED' | 'LOGOUT';
 
 /**
- * 用户类。可转换成 string 保存。
+ * User class.
  */
-export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUser> {
+export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUser>, IAbmClassToInterface<AbmUser, AbmUserForSave> {
 
     public static readonly STORAGE_KEY = 'ABM_USER';
 
@@ -47,7 +48,7 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
     private customProps: Record<string, unknown> = {};
 
     /**
-     * 新建用户
+     * Ctor
      * @param id user id
      * @param password user password without encrypt
      * @param rememberMe remember me
@@ -92,12 +93,12 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
         if (this.tokenExpire === null) {
             throw new Error('setTokenExpireFromString: date format incorrect');
         }
-        this.updateUserStatus();
+        this.checkUserStatus();
     }
 
     public setTokenExpire(expire: Date): void {
         this.tokenExpire = expire;
-        this.updateUserStatus();
+        this.checkUserStatus();
     }
 
     public setCustomProps(props: Record<string, unknown>): void {
@@ -108,19 +109,14 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
         return this.customProps as T;
     }
 
+    public checkUserStatus(): boolean {
 
-    public updateUserStatus(status?: AbmUserStatus): void {
-
-        if (status) {
-            this.status = status;
-            return;
-        }
-
-        if (this.tokenExpire?.getTime() < new Date().getTime()) {
-            this.status = 'EXPIRED';
-        } else {
+        if (this.token && this.tokenExpire?.getTime() > new Date().getTime()) {
             this.status = 'LOGIN';
+        } else {
+            this.status = 'EXPIRED';
         }
+        return this.status === 'LOGIN';
     }
 
     /**
@@ -135,7 +131,7 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
         return this;
     }
 
-    public toSaveString(): string {
+    public toInterface(): AbmUserForSave {
         const obj: AbmUserForSave = {
             displayName: this.displayName ?? 'undefined',
             id: this.getEncryptId(),
@@ -146,22 +142,28 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
             refreshToken: this.refreshToken ?? 'undefined',
             customProps: JSON.stringify(this.customProps),
         };
+        return obj;
+    }
+    public fromInterface(data: AbmUserForSave): AbmUser {
+        this.id = AbmEncrypt.decrypt(data.id);
+        this.password = AbmEncrypt.decrypt(data.password);
+        this.rememberMe = data.rememberMe;
+        this.token = data.token;
+        this.setTokenExpireFromString(data.tokenExpire);
+        this.refreshToken = data.refreshToken;
+        this.customProps = JSON.parse(data.customProps);
+        return this;
+    }
+
+    public toSaveString(): string {
+        const obj = this.toInterface();
 
         return JSON.stringify(obj);
     }
 
     public parseFromString(data: string): AbmUser {
         const obj: AbmUserForSave = JSON.parse(data);
-
-        this.id = AbmEncrypt.decrypt(obj.id);
-        this.password = AbmEncrypt.decrypt(obj.password);
-        this.rememberMe = obj.rememberMe;
-        this.token = obj.token;
-        this.setTokenExpireFromString(obj.tokenExpire);
-        this.refreshToken = obj.refreshToken;
-        this.customProps = JSON.parse(obj.customProps);
-
-        return this;
+        return this.fromInterface(obj);
     }
 
     public equals(other: AbmUser): boolean {
