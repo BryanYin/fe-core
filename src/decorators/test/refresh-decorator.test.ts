@@ -16,18 +16,18 @@ class B {
 
     @AbmStartRefresh
     startRefresh() {
-        console.log('refresh started');
+        // console.log('refresh started');
         return;
     }
 
     add() {
-        console.log('add running.');
+        // console.log('add running.');
         this.i++;
     }
 
     @AbmStopRefresh
     stopRefresh() {
-        console.log('refresh stopped');
+        // console.log('refresh stopped');
         return;
     }
 

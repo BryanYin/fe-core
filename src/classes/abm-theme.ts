@@ -19,10 +19,13 @@ export class AbmTheme implements IAbmStringSavable<AbmTheme> {
     key = ABM_THEME_KEY;
     name: string;
     path: string;
-    themeType?: AbmThemeType;
+    themeType: AbmThemeType;
 
-    constructor(name: string, path?: string, themeType?: AbmThemeType) {
-        this.name = name;
+    constructor();
+    constructor(name: string);
+    constructor(name: string, path: string, themeType: AbmThemeType);
+    constructor(name?: string, path?: string, themeType?: AbmThemeType) {
+        this.name = name ?? "default";
         this.path = path ?? this.inferPathFromName();
         this.themeType = themeType ?? this.inferTypeFromName();
     }
@@ -32,7 +35,7 @@ export class AbmTheme implements IAbmStringSavable<AbmTheme> {
      * TODO：是否需要考虑 scss？
      */
     public inferPathFromName(): string {
-        return AbmUtil.formPath(this.name + '.css', AbmFilePaths.getPath(AbmFilePathType.THEME));
+        return AbmUtil.buildUrl(AbmFilePaths.getPath(AbmFilePathType.THEME), this.name + '.css');
     }
 
     /**

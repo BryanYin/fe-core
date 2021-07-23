@@ -24,7 +24,7 @@ export class AbmLogger {
 
         const loggerName = typeof t === 'string' ? t : t.name;
 
-        return AbmLogger.loggers.getOrDefaultThenPutDefault(loggerName, new AbmLogger(loggerName));
+        return AbmLogger.loggers.getOrDefaultThenSetDefault(loggerName, new AbmLogger(loggerName));
     }
 
     private constructor(cls: string) {
@@ -33,6 +33,10 @@ export class AbmLogger {
 
     public static infoAbm(message: unknown, ...optionalParams: unknown[]): void {
         console.log(ABM_LOGGER_PREFIX, ABM_LOGGER_COLOR, message, ...optionalParams);
+    }
+
+    public static warnAbm(message: unknown, ...optionalParams: unknown[]): void {
+        console.warn(ABM_LOGGER_PREFIX, ABM_LOGGER_COLOR, message, ...optionalParams);
     }
 
     public static errorAbm(message: unknown, ...optionalParams: unknown[]): void {

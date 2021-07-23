@@ -1,14 +1,14 @@
 import { AbmCommonPrimitives, AbmUtil } from "./abm-util";
 
 export class AbmArrays {
-    public static find<T extends Record<string, unknown>>(array: T[], field: keyof T, value: number | string | boolean, contain = false): T | undefined {
+    public static find<T extends Record<keyof T, unknown>>(array: T[], field: keyof T, value: number | string | boolean, contain = false): T | undefined {
 
         const index = this.indexOf(array, field, value, contain);
 
         return index >= 0 ? array[index] : undefined;
     }
 
-    public static indexOf<T extends Record<string, unknown>>(array: T[], field: keyof T, value: number | string | boolean, contain = false): number {
+    public static indexOf<T extends Record<keyof T, unknown>>(array: T[], field: keyof T, value: number | string | boolean, contain = false): number {
         if (array?.length === 0) {
             return -1;
         }
@@ -27,7 +27,7 @@ export class AbmArrays {
         return -1;
     }
 
-    public static findFirstMatch<T extends Record<string, unknown>>(array: T[], fieldPath: string, matches: string | string[]): T | undefined {
+    public static findFirstMatch<T extends Record<keyof T, unknown>>(array: T[], fieldPath: string, matches: string | string[]): T | undefined {
         if (!(array?.length > 0)) {
             return undefined;
         }
@@ -47,7 +47,7 @@ export class AbmArrays {
         return undefined;
     }
 
-    public static sort<T extends Record<string, unknown>>(array: T[], sortBy?: (keyof T) | (keyof T)[], desc = false): T[] {
+    public static sort<T extends Record<keyof T, unknown>>(array: T[], sortBy?: (keyof T) | (keyof T)[], desc = false): T[] {
         if (!array || array.length === 0) {
             return array;
         }
@@ -95,14 +95,14 @@ export class AbmArrays {
         return ret;
     }
 
-    public static remove<T extends Record<string, unknown>>(array: T[], field: keyof T, value: AbmCommonPrimitives, contain = false): T[] {
+    public static remove<T extends Record<keyof T, unknown>>(array: T[], field: keyof T, value: AbmCommonPrimitives, contain = false): T[] {
         const ret = array.filter(a => {
             return contain ? !String.prototype.includes.call(a[field], Object.prototype.toString.call(value)) : a[field] !== value;
         });
         return ret;
     }
 
-    public static replace<T extends Record<string, unknown>>(array: T[], newItem: T, field: string, key: AbmCommonPrimitives): T[] | undefined {
+    public static replace<T extends Record<keyof T, unknown>>(array: T[], newItem: T, field: keyof T, key: AbmCommonPrimitives): T[] | undefined {
         const i = this.indexOf(array, field, key);
         if (i >= 0) {
             return array.splice(i, 1, newItem);

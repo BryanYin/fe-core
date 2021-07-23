@@ -37,8 +37,6 @@ export function AbmRefresher<T extends { new(...args: any[]): any; }>(options?: 
             public refreshSub = undefined;
             public refreshMethod = options?.method ?? 'loadData';
         };
-
-        return constructor;
     };
 }
 

@@ -1,11 +1,15 @@
 import { IAbmClassToInterface } from '../interfaces/class-to-interface.interface';
 
+export type AbmNameValueInterface<T> = Pick<AbmNameValue<T>, 'name' | 'value'>;
+
 /**
- * NameValue，比较重要的一个类，存储单一的 key-value 类型。
+ * Store a single name-value pair.
  *
- * 提供 toInterface() 方法转换为 接口。在 ECharts 中使用必须转换。
+ * Providing `toInterface()` method that could transfer a class object to plain interface object.
  */
-export class AbmNameValue<T> implements IAbmClassToInterface<AbmNameValue<T>> {
+export class AbmNameValue<T> implements IAbmClassToInterface<AbmNameValue<T>, AbmNameValueInterface<T>> {
+    [name: string]: unknown;
+
     public name: string;
     public value: T | undefined;
 
@@ -14,17 +18,12 @@ export class AbmNameValue<T> implements IAbmClassToInterface<AbmNameValue<T>> {
         this.value = value ?? undefined;
     }
 
-
-    toInterface(): { name: string; value: T | undefined; } {
+    toInterface(): AbmNameValueInterface<T> {
         return { name: this.name, value: this.value };
     }
 
-    fromInterface(data: { name: string; value: T | undefined; }): AbmNameValue<T> {
-        for (const property of ['name', 'value']) {
-            if (property && !Object.prototype.hasOwnProperty.call(data, property)) {
-                throw new Error('data does not have property: ' + property);
-            }
-        }
+    fromInterface(data: AbmNameValueInterface<T>): AbmNameValue<T> {
         return new AbmNameValue(data.name, data.value);
     }
 }
+

@@ -34,7 +34,7 @@ export class AbmUtil {
             return Object.keys(obj).reduce((newObj: any, key) => {
                 newObj[key] = AbmUtil.deepCopy(obj[key]);
                 return newObj;
-            }, {})
+            }, {});
         }
 
         return obj;
@@ -76,11 +76,11 @@ export class AbmUtil {
         return str1.localeCompare(str2);
     }
 
-    public static getPropertyOrDefault<T extends Record<string, unknown>>(obj: T, property: string, defaultVal?: unknown): unknown {
+    public static getPropertyOrDefault<T extends Record<keyof T, unknown>>(obj: T, property: string, defaultVal?: unknown): unknown {
         if (Object.prototype.hasOwnProperty.call(obj, property)) {
-            return obj[property] as T;
+            return obj[property as keyof T];
         } else if (defaultVal) {
-            return defaultVal as T;
+            return defaultVal;
         } else {
             return undefined;
         }
@@ -141,8 +141,8 @@ export class AbmUtil {
     /**
      * Transfer {key1:[v1,v2],key2:[v3,v4]} -> [{key1:v1,key2:v3},{key1:v2,key2:v4}]
      */
-    public static zipData(obj: { [key: string]: unknown[] }): { [key: string]: unknown }[] {
-        const ret: { [key: string]: unknown }[] = [];
+    public static zipData(obj: { [key: string]: unknown[]; }): { [key: string]: unknown; }[] {
+        const ret: { [key: string]: unknown; }[] = [];
         for (const k in obj) {
             const arr = obj[k];
             for (let i = 0; i < arr.length; i++) {
@@ -150,7 +150,7 @@ export class AbmUtil {
                 if (ret[i]) {
                     ret[i][k] = each;
                 } else {
-                    const yo: { [key: string]: unknown } = {};
+                    const yo: { [key: string]: unknown; } = {};
                     yo[k] = each;
                     ret.push(yo);
                 }
@@ -162,8 +162,8 @@ export class AbmUtil {
     /**
      * Transfer [{key1:v1,key2:v3},{key1:v2,key2:v4}] -> {key1:[v1,v2],key2:[v3,v4]}
      */
-    public static unzipData(obj: { [key: string]: unknown }[]): { [key: string]: unknown[] } {
-        const ret: { [key: string]: unknown[] } = {};
+    public static unzipData(obj: { [key: string]: unknown; }[]): { [key: string]: unknown[]; } {
+        const ret: { [key: string]: unknown[]; } = {};
 
         for (const o of obj) {
             for (const k in o) {
@@ -183,7 +183,7 @@ export class AbmUtil {
      *
      * @param obj the object to be transferred
      */
-    public static keysAndValues(obj: { [key: string]: unknown }): { keys: string[], values: unknown[] } {
+    public static keysAndValues(obj: { [key: string]: unknown; }): { keys: string[], values: unknown[]; } {
         const keys = new Array<string>();
         const values = new Array<unknown>();
         for (const key in obj) {
@@ -193,7 +193,7 @@ export class AbmUtil {
         return { keys, values };
     }
 
-    public static maxMinAvg(data: number[], decimal = 0): { max: number, min: number, avg: number } {
+    public static maxMinAvg(data: number[], decimal = 0): { max: number, min: number, avg: number; } {
         if (data.length === 0) {
             return { max: 0, min: 0, avg: 0 };
         }
@@ -205,7 +205,7 @@ export class AbmUtil {
     }
 
 
-    public static hexToRgb(hex: string, alpha?: number): { r: number, g: number, b: number, str: string } | undefined {
+    public static hexToRgb(hex: string, alpha?: number): { r: number, g: number, b: number, str: string; } | undefined {
         const rgb: number[] | undefined = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (_m, r, g, b) => '#' + r + r + g + g + b + b)
             .substring(1).match(/.{2}/g)?.map(x => parseInt(x, 16));
 
@@ -226,7 +226,7 @@ export class AbmUtil {
         return clientWidth ? size * (clientWidth / 1920) : size;
     }
 
-    public static formPath(...paths: string[]): string {
+    public static buildUrl(...paths: string[]): string {
         let url = '';
         for (let i = 0; i < paths.length - 1; i++) {
             url += (paths[i].endsWith('/') ? paths[i] : (paths[i] + '/'));
@@ -241,7 +241,7 @@ export class AbmUtil {
         }
     }
 
-    public static enUnitScale(num: number, basicTitle = ''): { name: string, value: number | undefined, scale: number } {
+    public static enUnitScale(num: number, basicTitle = ''): { name: string, value: number | undefined, scale: number; } {
         let scaled: AbmNameValue<number>;
         let scale = 1;
         if (num < 1000) {
@@ -265,7 +265,7 @@ export class AbmUtil {
         return { ...scaled.toInterface(), scale: scale };
     }
 
-    public static cnUnitScale(num: number, basicTitle = ''): { name: string, value: number | undefined, scale: number } {
+    public static cnUnitScale(num: number, basicTitle = ''): { name: string, value: number | undefined, scale: number; } {
         let scaled: AbmNameValue<number>;
         let scale = 1;
         if (num < 1_0000) {
@@ -289,8 +289,8 @@ export class AbmUtil {
         return { ...scaled.toInterface(), scale: scale };
     }
 
-    private static _getScale(num: number, basicTitle = '', language: 'en' | 'cn' = 'en'): { name: string, value: number | undefined, scale: number } {
-        let res: { name: string, value: number | undefined, scale: number };
+    private static _getScale(num: number, basicTitle = '', language: 'en' | 'cn' = 'en'): { name: string, value: number | undefined, scale: number; } {
+        let res: { name: string, value: number | undefined, scale: number; };
 
         if (language === 'en') {
             res = AbmUtil.enUnitScale(num, basicTitle);
@@ -300,7 +300,7 @@ export class AbmUtil {
         return res;
     }
 
-    public static transferUnitForMultiArray(nums: number[][], basicTitle = '', language: 'en' | 'cn' = 'en'): { name: string, nums: number[][] } {
+    public static transferUnitForMultiArray(nums: number[][], basicTitle = '', language: 'en' | 'cn' = 'en'): { name: string, nums: number[][]; } {
         const omitZeros = nums.map(ns => ns.filter(n => n > 0));
         const min = Math.min(...omitZeros.map(ns => Math.min(...ns)));
 
@@ -309,7 +309,7 @@ export class AbmUtil {
         return { name: res.name, nums: nums.map(ns => ns.map(n => Math.round(n / res.scale))) };
     }
 
-    public static transferUnitForArray(nums: number[], basicTitle = '', language: 'en' | 'cn' = 'en'): { name: string, nums: number[] } {
+    public static transferUnitForArray(nums: number[], basicTitle = '', language: 'en' | 'cn' = 'en'): { name: string, nums: number[]; } {
         const omitZeros = nums.filter(n => n > 0);
         const min = Math.min(...omitZeros);
 
@@ -394,11 +394,12 @@ export class AbmUtil {
         }
     }
 
-    public static deepValue<T extends Record<string, unknown>>(obj: T, path: string): any {
+    public static deepValue<T extends Record<keyof T, unknown>>(obj: T, path: string): any {
         const paths = path.split('.');
         let current = obj;
 
-        for (const p of paths) {
+        for (const path of paths) {
+            const p = path as keyof T;
             if (current[p] === undefined && current[p] === null) {
                 return current[p];
             } else {
@@ -406,42 +407,5 @@ export class AbmUtil {
             }
         }
         return current;
-    }
-
-    private static pSBCr(d: any) {
-        const i = parseInt, m = Math.round;
-        const n = d.length, x: any = {};
-        if (n > 9) {
-            const [r, g, b, a] = d = d.split(","), n = d.length;
-            if (n < 3 || n > 4) return null;
-            x.r = i(r[3] == "a" ? r.slice(5) : r.slice(4)), x.g = i(g), x.b = i(b), x.a = a ? parseFloat(a) : -1
-        } else {
-            if (n == 8 || n == 6 || n < 4) return null;
-            if (n < 6) d = "#" + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : "");
-            d = i(d.slice(1), 16);
-            if (n == 9 || n == 5) x.r = d >> 24 & 255, x.g = d >> 16 & 255, x.b = d >> 8 & 255, x.a = m((d & 255) / 0.255) / 1000;
-            else x.r = d >> 16, x.g = d >> 8 & 255, x.b = d & 255, x.a = -1
-        } return x
-    }
-
-    /**
-     * 
-     * @param p < Percentage Float > typical range of -1.0 to 1.0
-     * @param c0 < "from" Color String >
-     * @param c1 < "to" Color String >
-     * @param l < UseLinear Boolean >
-     */
-    public static pSBC(p: number, c0: string, c1?: string, l?: boolean): string | undefined {
-        let r, g, b, P, f, t, h, a: any = typeof (c1) == "string";
-        const m = Math.round;
-        if (typeof (p) != "number" || p < -1 || p > 1 || typeof (c0) != "string" || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return undefined;
-
-        h = c0.length > 9, h = a ? c1 && c1.length > 9 ? true : c1 == "c" ? !h : false : h, f = AbmUtil.pSBCr(c0), P = p < 0, t = c1 && c1 != "c" ? AbmUtil.pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 }, p = P ? p * -1 : p, P = 1 - p;
-        if (!f || !t) return undefined;
-        if (l) r = m(P * f.r + p * t.r), g = m(P * f.g + p * t.g), b = m(P * f.b + p * t.b);
-        else r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5), g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5), b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5);
-        a = f.a, t = t.a, f = a >= 0 || t >= 0, a = f ? a < 0 ? t : t < 0 ? a : a * P + t * p : 0;
-        if (h) return "rgb" + (f ? "a(" : "(") + r + "," + g + "," + b + (f ? "," + m(a * 1000) / 1000 : "") + ")";
-        else return "#" + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2)
     }
 }
