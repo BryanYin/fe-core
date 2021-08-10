@@ -26,10 +26,10 @@
     "build": "tsc",
     "types:browser": "tsc --declarationDir dist/browser --emitDeclarationOnly true",
     "build-all": "yarn clean && yarn build && yarn esbuild-node && yarn esbuild-browser",
-    "esbuild-browser": "esbuild src/main.ts --bundle --format=esm --sourcemap=external --outfile=dist/esbuild/browser.js",
+    "esbuild-browser": "esbuild src/main.ts --bundle --minify --format=esm --sourcemap=external --outfile=dist/esbuild/browser.js",
     "esbuild-browser:dev": "esbuild src/main.ts --bundle --outfile=dist/esbuild/browser.js",
     "esbuild-browser:watch": "esbuild src/main.ts --bundle --watch --outfile=dist/esbuild/browser.js",
-    "esbuild-node": "esbuild src/main.ts --bundle --platform=node --format=esm  --sourcemap=external --outfile=dist/esbuild/cli.js",
+    "esbuild-node": "esbuild src/main.ts --bundle --minify --platform=node --format=esm  --sourcemap=external --outfile=dist/esbuild/cli.js",
     "esbuild-node:dev": "esbuild src/main.ts --bundle --sourcemap=external --outfile=dist/esbuild/cli.js",
     "esbuild-node:watch": "esbuild src/main.ts --bundle --watch --sourcemap=external --outfile=dist/esbuild/cli.js"
   },

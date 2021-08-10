@@ -1,7 +1,7 @@
 import { Observable, ReplaySubject } from 'rxjs';
 import { ajax, AjaxConfig } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
-import { AbmDataMapping, AbmHttpMethod, AbmHttpRequest, AbmResponseData, AbmServerType } from '../global/types';
+import { AbmDataMapping, AbmHttpMethod, AbmHttpRequest, AbmObjectType, AbmResponseData, AbmServerType } from '../global/types';
 import { AbmFilePaths, AbmFilePathType } from '../utils/abm-file-path';
 import { AbmLogger } from '../utils/abm-logger';
 import { AbmUtil } from '../utils/abm-util';
@@ -59,6 +59,14 @@ export class AbmDataConnection {
         adc = new AbmDataConnection(serverUrl, requests, useMock);
         this.instances.set(name, adc);
         return adc;
+    }
+
+    public static simpleGet<T>(url: string, headers?: Record<string, string>): Observable<T> {
+        return ajax.get<T>(url, headers).pipe(map(resp => {
+            return resp.response;
+        }), catchError(err => {
+            throw err;
+        }));
     }
 
     private apiUrl: string;
@@ -143,7 +151,7 @@ export class AbmDataConnection {
         this.dataErrCount.clear();
     }
 
-    public dataMapping<S extends Record<keyof S, unknown>, T extends Record<keyof T, unknown>>(
+    public dataMapping<S extends AbmObjectType<S>, T extends AbmObjectType<T>>(
         input: Array<S>, mapping: AbmDataMapping<S, T>, c: new () => T): Array<T> {
 
         if (!input || !mapping) {
@@ -179,14 +187,6 @@ export class AbmDataConnection {
             return result;
         }), catchError(err => {
             this._countApiStatus(request.endpoint, true);
-            throw err;
-        }));
-    }
-
-    public static simpleGet<T>(url: string, headers?: Record<string, string>): Observable<T> {
-        return ajax.get<T>(url, headers).pipe(map(resp => {
-            return resp.response;
-        }), catchError(err => {
             throw err;
         }));
     }

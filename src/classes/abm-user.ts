@@ -44,7 +44,7 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
     public displayName: string | undefined;
     public token: string | undefined;
     public refreshToken: string | undefined;
-    private tokenExpire: Date;
+    private tokenExpire: Date | undefined;
     private customProps: Record<string, unknown> = {};
 
     /**
@@ -69,12 +69,12 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
         return AbmEncrypt.encrypt(this.password);
     }
 
-    public getTokenExpire(): Date {
+    public getTokenExpire(): Date | undefined {
         return this.tokenExpire;
     }
 
-    public getTokenExpireISOString(): string {
-        return this.tokenExpire.toISOString();
+    public getTokenExpireISOString(): string | undefined {
+        return this.tokenExpire?.toISOString();
     }
 
     /**
@@ -96,6 +96,11 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
         this.checkUserStatus();
     }
 
+    public removeToken(): void {
+        this.token = undefined;
+        this.tokenExpire = new Date();
+    }
+
     public setTokenExpire(expire: Date): void {
         this.tokenExpire = expire;
         this.checkUserStatus();
@@ -111,7 +116,7 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
 
     public checkUserStatus(): boolean {
 
-        if (this.token && this.tokenExpire?.getTime() > new Date().getTime()) {
+        if (this.token && this.tokenExpire && this.tokenExpire.getTime() > new Date().getTime()) {
             this.status = 'LOGIN';
         } else {
             this.status = 'EXPIRED';
@@ -138,7 +143,7 @@ export class AbmUser implements IAbmStringSavable<AbmUser>, IAbmComparable<AbmUs
             password: this.getEncryptedPwd(),
             rememberMe: this.rememberMe,
             token: this.token ?? 'undefined',
-            tokenExpire: this.getTokenExpireISOString(),
+            tokenExpire: this.getTokenExpireISOString() ?? 'undefined',
             refreshToken: this.refreshToken ?? 'undefined',
             customProps: JSON.stringify(this.customProps),
         };

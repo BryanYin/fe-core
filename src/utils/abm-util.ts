@@ -1,5 +1,6 @@
 import { Subscription } from 'rxjs';
 import { AbmNameValue } from '../classes/abm-namevalue';
+import { AbmObjectType } from '../global/types';
 
 export type AbmCommonPrimitives = string | number | boolean;
 
@@ -14,7 +15,7 @@ export const SCALE_NEG = [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001
 
 export class AbmUtil {
 
-    public static deepCopy(obj: any): unknown {
+    public static deepCopy(obj: any): any {
         if (typeof obj !== 'object' || obj === null) {
             return obj;
         }
@@ -23,7 +24,7 @@ export class AbmUtil {
             return new Date(obj.getTime());
         }
 
-        if (obj instanceof Array) {
+        if (Array.isArray(obj)) {
             return obj.reduce((arr, item, i) => {
                 arr[i] = AbmUtil.deepCopy(item);
                 return arr;
@@ -76,7 +77,7 @@ export class AbmUtil {
         return str1.localeCompare(str2);
     }
 
-    public static getPropertyOrDefault<T extends Record<keyof T, unknown>>(obj: T, property: string, defaultVal?: unknown): unknown {
+    public static getPropertyOrDefault<T extends AbmObjectType<T>>(obj: T, property: string, defaultVal?: unknown): unknown {
         if (Object.prototype.hasOwnProperty.call(obj, property)) {
             return obj[property as keyof T];
         } else if (defaultVal) {
@@ -125,17 +126,6 @@ export class AbmUtil {
     public static sleep(ms: number): Promise<unknown> {
         const ret = new Promise(resolve => setTimeout(resolve, ms));
         return ret;
-    }
-
-    public static dateAdd(days: number, target?: Date): Date {
-
-        const from = target ? new Date(target) : new Date();
-
-        if (days === 0) {
-            return from;
-        }
-
-        return new Date(from.setDate(from.getDate() + days));
     }
 
     /**
@@ -394,7 +384,7 @@ export class AbmUtil {
         }
     }
 
-    public static deepValue<T extends Record<keyof T, unknown>>(obj: T, path: string): any {
+    public static deepValue<T extends AbmObjectType<T>>(obj: T, path: string): any {
         const paths = path.split('.');
         let current = obj;
 

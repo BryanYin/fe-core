@@ -1,6 +1,6 @@
 import { firstValueFrom } from "rxjs";
 import { AbmHttpMethod, AbmHttpRequest, AbmServerType } from "../../main";
-import { AbmDataConnection } from "../abm-data.service";
+import { AbmDataConnection } from "../abm-data-connection";
 
 const requests: AbmHttpRequest[] = [];
 requests.push(new AbmHttpRequest('get', 'get', AbmHttpMethod.GET));

@@ -7,7 +7,6 @@ import { AbmWebStorage } from '../utils/abm-web-storage';
 
 export class AbmThemeSingleton {
 
-
     private static instance: AbmThemeSingleton | undefined;
 
     public static getInstance(): AbmThemeSingleton {

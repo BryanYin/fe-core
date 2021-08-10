@@ -10,7 +10,9 @@ export enum AbmHttpMethod {
     DELETE = 'DELETE',
 }
 
-export class AbmDataMapping<S extends Record<keyof S, unknown>, T extends Record<keyof T, unknown>> {
+export type AbmObjectType<T> = Partial<Record<keyof T, unknown>>;
+
+export class AbmDataMapping<S extends AbmObjectType<S>, T extends AbmObjectType<T>> {
     public srcTgtMap: AbmBiMap<keyof S, keyof T>;
     constructor(
         public name: string,
