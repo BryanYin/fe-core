@@ -4,7 +4,7 @@ import { AbmMap } from '../classes/abm-map';
  * 日志标记和颜色。默认用 ABM 橙。
  */
 export const ABM_LOGGER_PREFIX = '%cABM';
-export const ABM_LOGGER_COLOR = 'color:#FD802E';
+export const ABM_LOGGER_COLOR = '#FD802E';
 
 export enum LoggingLevel {
     NONE = 'NONE',
@@ -15,6 +15,9 @@ export enum LoggingLevel {
 }
 
 export class AbmLogger {
+    public static prefix = ABM_LOGGER_PREFIX;
+    private static color = 'color:' + ABM_LOGGER_COLOR;
+
     private static loggers: AbmMap<string, AbmLogger> = new AbmMap();
 
     public static level: LoggingLevel = LoggingLevel.INFO;
@@ -31,26 +34,30 @@ export class AbmLogger {
         this._clazz = ' ' + cls;
     }
 
+    public static setColor(color: string): void {
+        AbmLogger.color = 'color:' + color;
+    }
+
     public static infoAbm(message: unknown, ...optionalParams: unknown[]): void {
-        console.log(ABM_LOGGER_PREFIX, ABM_LOGGER_COLOR, message, ...optionalParams);
+        console.log(AbmLogger.prefix, AbmLogger.color, message, ...optionalParams);
     }
 
     public static warnAbm(message: unknown, ...optionalParams: unknown[]): void {
-        console.warn(ABM_LOGGER_PREFIX, ABM_LOGGER_COLOR, message, ...optionalParams);
+        console.warn(AbmLogger.prefix, AbmLogger.color, message, ...optionalParams);
     }
 
     public static errorAbm(message: unknown, ...optionalParams: unknown[]): void {
-        console.error(ABM_LOGGER_PREFIX, ABM_LOGGER_COLOR, message, ...optionalParams);
+        console.error(AbmLogger.prefix, AbmLogger.color, message, ...optionalParams);
     }
 
     public static timeStart(label: string): void {
-        console.log(ABM_LOGGER_PREFIX, ABM_LOGGER_COLOR, '[' + label + '] start timing...');
+        console.log(AbmLogger.prefix, AbmLogger.color, '[' + label + '] start timing...');
         // tslint:disable-next-line: no-console
         console.time(label);
     }
 
     public static timeEnd(label: string): void {
-        console.log(ABM_LOGGER_PREFIX, ABM_LOGGER_COLOR, '[' + label + '] timing end:');
+        console.log(AbmLogger.prefix, AbmLogger.color, '[' + label + '] timing end:');
         // tslint:disable-next-line: no-console
         console.timeEnd(label);
     }
@@ -59,16 +66,16 @@ export class AbmLogger {
         if (this.shouldLog(level)) {
             switch (level) {
                 case LoggingLevel.ERROR:
-                    console.error(ABM_LOGGER_PREFIX + this._clazz, ABM_LOGGER_COLOR, message, ...optionalParams);
+                    console.error(AbmLogger.prefix + this._clazz, AbmLogger.color, message, ...optionalParams);
                     break;
                 case LoggingLevel.WARN:
-                    console.warn(ABM_LOGGER_PREFIX + this._clazz, ABM_LOGGER_COLOR, message, ...optionalParams);
+                    console.warn(AbmLogger.prefix + this._clazz, AbmLogger.color, message, ...optionalParams);
                     break;
                 case LoggingLevel.INFO:
-                    console.log(ABM_LOGGER_PREFIX + this._clazz, ABM_LOGGER_COLOR, message, ...optionalParams);
+                    console.log(AbmLogger.prefix + this._clazz, AbmLogger.color, message, ...optionalParams);
                     break;
                 default:
-                    console.log(ABM_LOGGER_PREFIX + this._clazz, ABM_LOGGER_COLOR, message, ...optionalParams);
+                    console.log(AbmLogger.prefix + this._clazz, AbmLogger.color, message, ...optionalParams);
             }
         }
     }
@@ -104,10 +111,10 @@ export class AbmLogger {
     }
 
     public infoOfRed(message: unknown, ...optionalParams: unknown[]): void {
-        console.log(ABM_LOGGER_PREFIX + this._clazz, 'coloe:red', message, ...optionalParams);
+        console.log(AbmLogger.prefix + this._clazz, 'color:red', message, ...optionalParams);
     }
 
     public infoOfGreen(message: unknown, ...optionalParams: unknown[]): void {
-        console.log(ABM_LOGGER_PREFIX + this._clazz, 'coloe:green', message, ...optionalParams);
+        console.log(AbmLogger.prefix + this._clazz, 'color:green', message, ...optionalParams);
     }
 }

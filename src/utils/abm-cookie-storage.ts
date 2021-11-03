@@ -1,7 +1,7 @@
 import { AbmCommonPrimitives } from "./abm-util";
 
 export class AbmCookieStorage {
-    setCookie(name: string, value: AbmCommonPrimitives, expiredays?: number): void {
+    public static setCookie(name: string, value: AbmCommonPrimitives, expiredays?: number): void {
         if (expiredays !== undefined) {
             const d = new Date();
             d.setTime(d.getTime() + (expiredays * 24 * 60 * 60 * 1000));
@@ -13,7 +13,7 @@ export class AbmCookieStorage {
         }
     }
 
-    getCookie(name: string): string | undefined {
+    public static getCookie(name: string): string | undefined {
         const cookieArr = document.cookie.split(';');
         for (const cookie of cookieArr) {
             const cookieParts = cookie.split('=');

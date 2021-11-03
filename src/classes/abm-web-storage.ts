@@ -1,6 +1,6 @@
 import { IAbmCRUD } from '../interfaces/crud.interface';
 import { IAbmStringSavable } from '../interfaces/saveable.interface';
-import { AbmLogger } from './abm-logger';
+import { AbmLogger } from '../utils/abm-logger';
 
 export class AbmWebStorage<T extends IAbmStringSavable<T>> implements IAbmCRUD<T>{
 

@@ -4,6 +4,8 @@ import { AbmObjectType } from '../global/types';
 
 export type AbmCommonPrimitives = string | number | boolean;
 
+export type valueof<T> = T[keyof T];
+
 export const quarterMap = ['', '一', '二', '三', '四'];
 
 export const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -173,9 +175,9 @@ export class AbmUtil {
      *
      * @param obj the object to be transferred
      */
-    public static keysAndValues(obj: { [key: string]: unknown; }): { keys: string[], values: unknown[]; } {
+    public static keysAndValues(obj: Record<string, unknown>): { keys: string[], values: valueof<Record<string, unknown>>[]; } {
         const keys = new Array<string>();
-        const values = new Array<unknown>();
+        const values = [];
         for (const key in obj) {
             keys.push(key);
             values.push(obj[key]);

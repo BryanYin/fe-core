@@ -1,15 +1,24 @@
 import { AbmObjectType } from "../global/types";
 import { AbmCommonPrimitives, AbmUtil } from "./abm-util";
 
+/**
+ * Array utilities.
+ */
 export class AbmArrays {
-    public static find<T extends AbmObjectType<T>>(array: T[], field: keyof T, value: number | string | boolean, contain = false): T | undefined {
+    public static find<T extends AbmObjectType<T>>(array: T[], field: keyof T, value: AbmCommonPrimitives, contain = false): T | undefined {
 
         const index = this.indexOf(array, field, value, contain);
 
         return index >= 0 ? array[index] : undefined;
     }
 
-    public static indexOf<T extends AbmObjectType<T>>(array: T[], field: keyof T, value: number | string | boolean, contain = false): number {
+    public static include<T extends AbmObjectType<T>>(array: T[], field: keyof T, value: AbmCommonPrimitives, contain = false): boolean {
+        const index = this.indexOf(array, field, value, contain);
+
+        return index >= 0;
+    }
+
+    public static indexOf<T extends AbmObjectType<T>>(array: T[], field: keyof T, value: AbmCommonPrimitives, contain = false): number {
         if (array?.length === 0) {
             return -1;
         }
@@ -20,8 +29,7 @@ export class AbmArrays {
                 return i;
             }
 
-            if (contain && typeof element[field] === 'string'
-                && String.prototype.includes.call(element[field], Object.prototype.toString.call(value))) {
+            if (contain && typeof element[field] === 'string' && (element[field] as string).includes(value.toString())) {
                 return i;
             }
         }
@@ -61,7 +69,7 @@ export class AbmArrays {
             if (sortBy === undefined &&
                 (typeof a === 'string' || typeof a === 'number') &&
                 (typeof b === 'string' || typeof b === 'number')) {
-                return AbmUtil.compare(Object.prototype.toString.call(a), Object.prototype.toString.call(b));
+                return AbmUtil.compare(a, b);
             }
 
             let result = 0;
@@ -72,7 +80,7 @@ export class AbmArrays {
                 fields = sortBy as (keyof T)[];
             }
             for (const f of fields) {
-                result = AbmUtil.compare(Object.prototype.toString.call(a[f]), Object.prototype.toString.call(b[f]));
+                result = AbmUtil.compare(a[f] as any, b[f] as any);
                 if (result !== 0) {
                     return desc ? -result : result;
                 }
@@ -98,7 +106,7 @@ export class AbmArrays {
 
     public static remove<T extends AbmObjectType<T>>(array: T[], field: keyof T, value: AbmCommonPrimitives, contain = false): T[] {
         const ret = array.filter(a => {
-            return contain ? !String.prototype.includes.call(a[field], Object.prototype.toString.call(value)) : a[field] !== value;
+            return contain ? !(a[field] as string).includes(value.toString()) : a[field] !== value;
         });
         return ret;
     }

@@ -14,3 +14,9 @@ test('Util object copy should work for array of objects', () => {
     const obj = [{ a: 1 }, { b: 'bstring' }, { c: [1, 2] }];
     expect(AbmUtil.deepCopy(obj)).toStrictEqual(obj);
 });
+
+test('compare dates should work', () => {
+    const date1: any = '2024-07-01';
+    const date2: any = '2021-10-01';
+    expect(AbmUtil.compare(date1, date2)).toBe(1);
+});

@@ -1,5 +1,5 @@
 import { AbmMethodCache } from '../classes/abm-cache';
-import { AbmStaticMethodCache } from '../utils/abm-method-cache';
+import { AbmStaticMethodCache } from '../classes/abm-method-cache';
 
 /**
  * 方法缓存装饰器。标注在方法上。则方法结果会被缓存。

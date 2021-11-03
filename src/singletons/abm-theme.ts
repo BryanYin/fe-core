@@ -2,8 +2,8 @@
 import { Subject } from 'rxjs';
 import { AbmMap } from '../classes/abm-map';
 import { AbmTheme } from '../classes/abm-theme';
+import { AbmWebStorage } from '../classes/abm-web-storage';
 import { AbmLogger } from '../utils/abm-logger';
-import { AbmWebStorage } from '../utils/abm-web-storage';
 
 export class AbmThemeSingleton {
 

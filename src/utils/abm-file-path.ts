@@ -1,3 +1,6 @@
+/**
+ * define assets file paths.
+ */
 export enum AbmFilePathType {
     IMAGE,
     BABYLON,
@@ -15,7 +18,7 @@ export class AbmFilePaths {
         [AbmFilePathType.IMAGE, 'assets/images/'],
         [AbmFilePathType.BABYLON, 'assets/models/babylon/'],
         [AbmFilePathType.ECHARTS, 'assets/echarts/'],
-        [AbmFilePathType.SBM, 'assets/models/SBM/'],
+        [AbmFilePathType.SBM, 'assets/models/sbm/'],
         [AbmFilePathType.JS, 'assets/js/'],
         [AbmFilePathType.DATA, 'assets/data/'],
         [AbmFilePathType.MOCK, 'assets/mock/'],

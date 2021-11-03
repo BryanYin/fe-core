@@ -1,5 +1,8 @@
 import { AbmLogger } from './abm-logger';
 
+/**
+ * encrypt utilities.
+ */
 export class AbmEncrypt {
 
     private static _logger = AbmLogger.instance(AbmEncrypt);

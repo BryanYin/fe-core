@@ -1,5 +1,5 @@
-import { AbmMethodCache, AbmRefreshCache } from '../classes/abm-cache';
-import { AbmMap } from '../classes/abm-map';
+import { AbmMethodCache, AbmRefreshCache } from './abm-cache';
+import { AbmMap } from './abm-map';
 
 export class AbmStaticMethodCache {
     private static methodMap: AbmMap<string, AbmMethodCache>;
