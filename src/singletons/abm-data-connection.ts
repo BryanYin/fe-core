@@ -52,7 +52,7 @@ export class AbmDataConnection {
 
         if (adc) {
             const printName = typeof name === 'string' ? name : AbmServerType[name];
-            AbmLogger.warnAbm('Data connection of name ' + printName + ' already exists, make sure you are init the correct instance');
+            AbmLogger.infoAbm('Getting existing data connection for:' + printName);
             return adc;
         }
 

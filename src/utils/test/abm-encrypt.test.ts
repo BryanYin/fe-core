@@ -1,5 +1,10 @@
 import { AbmEncrypt } from "../abm-encrypt";
 
-test('Encrypt and Decrypt works!', () => {
-    expect(AbmEncrypt.decrypt(AbmEncrypt.encrypt("This means en/de crypt works!"))).toBe("This means en/de crypt works!")
+// 测试次数
+const arrayLen = 100;
+const phoneNos = new Array(arrayLen);
+phoneNos.fill('This means en/de crypt works!');
+
+test.each(phoneNos)('Encrypt and Decrypt %#', (a) => {
+    expect(AbmEncrypt.decrypt(AbmEncrypt.encrypt(a))).toBe(a);
 });

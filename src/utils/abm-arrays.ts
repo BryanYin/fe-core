@@ -89,17 +89,15 @@ export class AbmArrays {
         });
     }
 
-    public static create<T>(length?: number, fill?: T): T[] {
-        let ret: T[];
+    public static create<T>(length?: number, fill?: T): (T | undefined)[] {
+        let ret: (T | undefined)[];
         if (length === undefined) {
             ret = [];
         } else {
             ret = new Array(length);
         }
 
-        if (fill) {
-            ret.fill(fill);
-        }
+        ret.fill(fill);
 
         return ret;
     }
@@ -123,6 +121,22 @@ export class AbmArrays {
 
     public static loopGetAtIndex<T>(array: T[], idx: number): T {
         return array[idx % array.length];
+    }
+
+    public static chunk<T>(array: T[], chunk: number): T[][] {
+
+        if (chunk <= 0) {
+            throw new Error("Array chunk should be larger than 0");
+        }
+
+        const ret: T[][] = [];
+
+        let i, j, temporary;
+        for (i = 0, j = array.length; i < j; i += chunk) {
+            temporary = array.slice(i, i + chunk);
+            ret.push(temporary);
+        }
+        return ret;
     }
 
 }

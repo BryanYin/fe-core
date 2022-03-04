@@ -5,7 +5,7 @@ import { AbmLogger } from './abm-logger';
  */
 export class AbmEncrypt {
 
-    private static _logger = AbmLogger.instance(AbmEncrypt);
+    private static _logger = AbmLogger.instance('AbmEncrypt');
 
     private static salt = [
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
@@ -35,7 +35,7 @@ export class AbmEncrypt {
         for (let i = 0; i < pwd.length; i++) {
             encrypt += String.fromCharCode(pwd.charCodeAt(i) + (i % 2 === 0 ? offset : -offset));
         }
-        return encrypt + pwd.charAt(0) + pwd.charAt(pwd.length - 1) + Math.round(Math.random() * 10) + offset;
+        return encrypt + pwd.charAt(0) + pwd.charAt(pwd.length - 1) + Math.round(Math.random() * 10) % 10 + offset;
     }
 
     public static basicDecrypt(enc: string): string {

@@ -23,11 +23,10 @@ export class AbmLogger {
     public static level: LoggingLevel = LoggingLevel.INFO;
     private readonly _clazz: string;
 
-    public static instance<T>(t: (new (...args: unknown[]) => T) | string): AbmLogger {
+    public static instance(loggerName?: string): AbmLogger {
+        const name = loggerName ?? '';
 
-        const loggerName = typeof t === 'string' ? t : t.name;
-
-        return AbmLogger.loggers.getOrDefaultThenSetDefault(loggerName, new AbmLogger(loggerName));
+        return AbmLogger.loggers.getOrDefaultThenSetDefault(name, new AbmLogger(name));
     }
 
     private constructor(cls: string) {
